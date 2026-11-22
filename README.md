@@ -17,7 +17,7 @@ Fonts: Unbounded (display), Sora (UI), Instrument Serif (accents), Martian Mono 
 | Signal | Source | Notes |
 | --- | --- | --- |
 | Street incidents — fire (আগুন), hartal (হরতাল), processions/rallies (মিছিল), blockades (অবরোধ), clashes, traffic jams (with cause), road accidents, waterlogging, power outages | Bangladeshi news via Google News RSS (Bangla + English, last 24 h) | Headlines are classified, placed with a Dhaka/Bangladesh gazetteer (area-level, approximate) and clustered. **2+ independent outlets → confirmed**, 1 → unverified. Price idioms ("বাজারে আগুন") are filtered out. |
-| Live traffic — jams, closures, accidents, roadworks with cause and delay | TomTom Traffic API | Optional: set `TOMTOM_API_KEY`. One request per ~16 km area, cached 20 min, capped per day; stale data is served if the budget runs out |
+| Live traffic — jams, closures, accidents, roadworks with cause and delay | TomTom Traffic API | Optional: set `TOMTOM_API_KEY`. One request per ~16 km area, cached 20 min (3 h for areas with no coverage), capped per day. **TomTom currently has no incident or flow coverage for Bangladesh** — it adds data for users in covered regions |
 | Community reports | Built-in (`/api/reports`) | Unverified until 3 nearby confirmations; expire after 6 h |
 | Weather, rain outlook, heat, wind | Open-Meteo | |
 | Air quality (US AQI, PM2.5) | Open-Meteo Air Quality (CAMS) | |
