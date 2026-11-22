@@ -7,6 +7,8 @@
  *    (well under the API's 10,000 km² bbox limit) and is shared by everyone in that cell.
  *  - Each cell is cached for TOMTOM_CACHE_MINUTES (default 20).
  *  - At most TOMTOM_DAILY_LIMIT requests per day per server instance (default 80 ≈ 2,400 / month).
+ *  - Cells with no incidents (no TomTom coverage, e.g. Bangladesh as of 2026-11) are re-checked
+ *    only every TOMTOM_EMPTY_CACHE_MINUTES (default 180).
  *  - On errors or when the budget is spent, the last good result is served (marked stale).
  */
 import "./net"
@@ -57,6 +59,8 @@ const HALF_DEG = 0.11 // bbox half-size ≈ 12 km → ~24 km square
 const NEARBY_KM = 15
 const TTL_MS = Number(process.env.TOMTOM_CACHE_MINUTES || 20) * 60_000
 const DAILY_LIMIT = Number(process.env.TOMTOM_DAILY_LIMIT || 80)
+// Areas TomTom doesn't cover (e.g. Bangladesh today) return no incidents — re-check those rarely.
+const EMPTY_TTL_MS = Number(process.env.TOMTOM_EMPTY_CACHE_MINUTES || 180) * 60_000
 
 type CellEntry = { at: number; incidents: Omit<LiveSignal, "distanceKm">[] }
 const cells = new Map<string, CellEntry>()
@@ -151,7 +155,8 @@ export async function trafficSignals(p: Pt): Promise<{ signals: LiveSignal[]; st
       .slice(0, 80),
   })
 
-  if (cached && Date.now() - cached.at < TTL_MS) return finish(cached, false)
+  const ttl = cached && cached.incidents.length === 0 ? EMPTY_TTL_MS : TTL_MS
+  if (cached && Date.now() - cached.at < ttl) return finish(cached, false)
 
   const { used, limit } = trafficBudget()
   if (used >= limit) {
