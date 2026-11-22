@@ -1,4 +1,5 @@
-import { runFeeds, reverseGeocode, trafficSignals, tomtomEnabled } from "@/lib/live/feeds"
+import { runFeeds, reverseGeocode } from "@/lib/live/feeds"
+import { trafficEnabled, trafficSignals } from "@/lib/live/traffic"
 import { fetchNewsIncidents, newsSignals } from "@/lib/live/news"
 import { reportSignals } from "@/lib/live/reports-store"
 import { cached, parseCoords } from "@/lib/live/cache"
@@ -25,9 +26,9 @@ export async function GET(request: Request) {
       (n) => ({ ok: true as const, signals: newsSignals(n, c.exact) }),
       (e) => ({ ok: false as const, signals: [], error: String(e?.message ?? e) }),
     ),
-    tomtomEnabled()
-      ? cached(`traffic:${key}`, 2 * 60_000, () => trafficSignals(p)).then(
-          (t) => ({ ok: true as const, signals: t }),
+    trafficEnabled()
+      ? trafficSignals(c.exact).then(
+          (t) => ({ ok: true as const, signals: t.signals, error: t.note }),
           (e) => ({ ok: false as const, signals: [], error: String(e?.message ?? e) }),
         )
       : Promise.resolve(null),
@@ -51,7 +52,7 @@ export async function GET(request: Request) {
       { name: "Community reports", ok: true, count: reports.length },
       { name: "News reports (Google News)", ok: news.ok, count: news.signals.length, error: news.ok ? undefined : news.error },
       traffic
-        ? { name: "TomTom live traffic", ok: traffic.ok, count: traffic.signals.length, error: traffic.ok ? undefined : traffic.error }
+        ? { name: "TomTom live traffic", ok: traffic.ok, count: traffic.signals.length, error: traffic.error }
         : { name: "TomTom live traffic", ok: false, count: 0, error: "not configured (set TOMTOM_API_KEY)" },
       ...sources,
     ],

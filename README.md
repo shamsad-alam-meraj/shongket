@@ -17,7 +17,7 @@ Fonts: Unbounded (display), Sora (UI), Instrument Serif (accents), Martian Mono 
 | Signal | Source | Notes |
 | --- | --- | --- |
 | Street incidents — fire (আগুন), hartal (হরতাল), processions/rallies (মিছিল), blockades (অবরোধ), clashes, traffic jams (with cause), road accidents, waterlogging, power outages | Bangladeshi news via Google News RSS (Bangla + English, last 24 h) | Headlines are classified, placed with a Dhaka/Bangladesh gazetteer (area-level, approximate) and clustered. **2+ independent outlets → confirmed**, 1 → unverified. Price idioms ("বাজারে আগুন") are filtered out. |
-| Live traffic — jams, closures, accidents, roadworks with cause and delay | TomTom Traffic API | Optional: set `TOMTOM_API_KEY` |
+| Live traffic — jams, closures, accidents, roadworks with cause and delay | TomTom Traffic API | Optional: set `TOMTOM_API_KEY`. One request per ~16 km area, cached 20 min, capped per day; stale data is served if the budget runs out |
 | Community reports | Built-in (`/api/reports`) | Unverified until 3 nearby confirmations; expire after 6 h |
 | Weather, rain outlook, heat, wind | Open-Meteo | |
 | Air quality (US AQI, PM2.5) | Open-Meteo Air Quality (CAMS) | |
@@ -44,7 +44,8 @@ Open http://localhost:3000 and http://localhost:3000/live (allow location when t
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Production | Canonical URL for metadata, sitemap, OG images |
-| `TOMTOM_API_KEY` | Optional | Real-time traffic incidents |
+| `TOMTOM_API_KEY` | Optional | Real-time traffic incidents. Free key at https://my.tomtom.com/ — verify with `npm run check:traffic` |
+| `TOMTOM_DAILY_LIMIT` / `TOMTOM_CACHE_MINUTES` | Optional | Request budget (defaults 80/day, 20 min) — keeps within the ~2,500/month free tier |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Recommended in production | Durable, shared store for community reports (serverless filesystems don't persist) |
 
 ## Deploy
@@ -65,6 +66,7 @@ npm run build      # production build
 npm run start      # serve the build
 npm run lint       # ESLint
 npm run typecheck  # tsc --noEmit
+npm run check:traffic  # verify TOMTOM_API_KEY with one request
 ```
 
 ## Project layout
