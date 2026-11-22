@@ -1,6 +1,6 @@
 /**
  * Community report store.
- *  - Production: Upstash Redis (set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN) — durable,
+ *  - Production: Upstash Redis (set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN_KEY) — durable,
  *    shared across serverless instances.
  *  - Local dev: JSON file at .data/reports.json.
  *  - If neither is writable (e.g. read-only serverless FS), falls back to process memory.
@@ -23,7 +23,7 @@ export type Report = {
 
 const FILE = path.join(process.cwd(), ".data", "reports.json")
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL
-const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN_KEY
 const REDIS_KEY = "shongket:reports:v1"
 const MAX_AGE_H = 24
 const FRESH_H = 6

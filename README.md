@@ -43,10 +43,10 @@ Open http://localhost:3000 and http://localhost:3000/live (allow location when t
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Production | Canonical URL for metadata, sitemap, OG images |
+| `SITE_URL` | Production | Canonical URL for metadata, sitemap, OG images |
 | `TOMTOM_API_KEY` | Optional | Real-time traffic incidents. Free key at https://my.tomtom.com/ — verify with `npm run check:traffic` |
 | `TOMTOM_DAILY_LIMIT` / `TOMTOM_CACHE_MINUTES` | Optional | Request budget (defaults 80/day, 20 min) — keeps within the ~2,500/month free tier |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Recommended in production | Durable, shared store for community reports (serverless filesystems don't persist) |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN_KEY` | Recommended in production | Durable, shared store for community reports (serverless filesystems don't persist) |
 
 ## Deploy
 
