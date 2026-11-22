@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Share images read brand fonts + pre-shaped Bangla text from disk
+  outputFileTracingIncludes: {
+    "/opengraph-image": ["./src/assets/**/*"],
+    "/twitter-image": ["./src/assets/**/*"],
+    "/live/opengraph-image": ["./src/assets/**/*"],
+    "/live/twitter-image": ["./src/assets/**/*"],
+  },
   turbopack: {
     rules: {
       "*.css": {

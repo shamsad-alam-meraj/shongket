@@ -1,0 +1,42 @@
+{
+  "brand": {
+    "width": 71,
+    "height": 16
+  },
+  "tagline": {
+    "width": 455,
+    "height": 42
+  },
+  "bangla": {
+    "width": 53,
+    "height": 16
+  },
+  "fire": {
+    "width": 63,
+    "height": 15
+  },
+  "hartal": {
+    "width": 70,
+    "height": 17
+  },
+  "rally": {
+    "width": 63,
+    "height": 24
+  },
+  "blockade": {
+    "width": 81,
+    "height": 18
+  },
+  "jam": {
+    "width": 74,
+    "height": 21
+  },
+  "flood": {
+    "width": 43,
+    "height": 15
+  },
+  "air": {
+    "width": 91,
+    "height": 23
+  }
+}

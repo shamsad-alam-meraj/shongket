@@ -12,6 +12,8 @@ import { Voice } from "@/components/home/voice"
 import { Developers } from "@/components/home/developers"
 import { Roadmap } from "@/components/home/roadmap"
 import { About } from "@/components/home/about"
+import { JsonLd } from "@/components/seo/json-ld"
+import { SITE } from "@/lib/site"
 
 export default function Home() {
   return (
@@ -32,6 +34,34 @@ export default function Home() {
       </main>
       <Footer />
       <ScrollReveal />
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": `${SITE.url}/#organization`,
+            name: SITE.name,
+            alternateName: SITE.nameBn,
+            url: SITE.url,
+            logo: { "@type": "ImageObject", url: `${SITE.url}/icons/icon-512.png`, width: 512, height: 512 },
+            slogan: SITE.tagline,
+            description: SITE.description,
+            foundingLocation: { "@type": "Place", name: "Bangladesh" },
+            areaServed: "Bangladesh",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": `${SITE.url}/#website`,
+            name: SITE.name,
+            alternateName: SITE.nameBn,
+            url: SITE.url,
+            description: SITE.description,
+            inLanguage: ["en", "bn"],
+            publisher: { "@id": `${SITE.url}/#organization` },
+          },
+        ]}
+      />
     </>
   )
 }
