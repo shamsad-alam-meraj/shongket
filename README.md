@@ -85,6 +85,11 @@ src/
   lib/live/            feed adapters, news classifier, report store, cache, rate limit
 ```
 
+## Analytics
+
+Vercel Web Analytics (`@vercel/analytics`) is included in the root layout — cookieless, no consent banner needed.
+Enable it once in the Vercel dashboard: **Project → Analytics → Enable**. Data appears after the next deployment; it does nothing in local dev.
+
 ## Production notes
 
 - Security headers (HSTS, nosniff, frame-deny, referrer policy, `Permissions-Policy: geolocation=(self)`) in `next.config.ts`.

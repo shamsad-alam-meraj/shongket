@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Unbounded, Sora, Martian_Mono, Instrument_Serif, Anek_Bangla } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { MotionGuard } from "@/components/motion/motion-guard"
+import { Analytics } from "@vercel/analytics/next"
 import { SITE } from "@/lib/site"
 import "./globals.css"
 
@@ -76,6 +77,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col">
         <TooltipProvider>{children}</TooltipProvider>
         <MotionGuard />
+        {/* Vercel Web Analytics — cookieless page views; active only on Vercel deployments */}
+        <Analytics />
       </body>
     </html>
   )
