@@ -34,6 +34,17 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground sm:px-6">
           <span>Bangladesh-born · Built for the world</span>
+          <span>
+            Developed by{" "}
+            <a
+              href="https://shamsad.vercel.app/"
+              target="_blank"
+              rel="noopener"
+              className="text-foreground underline-offset-4 transition-colors hover:text-teal hover:underline"
+            >
+              Shamsad Alam Meraj
+            </a>
+          </span>
           <span>© 2026 SHONGKET</span>
         </div>
       </div>
