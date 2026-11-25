@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 
 const LINKS = [
   { href: "/live", label: "Live" },
+  { href: "/insights", label: "Insights" },
   { href: "/#platform", label: "Platform" },
   { href: "/#verification", label: "Verification" },
   { href: "/#modules", label: "Modules" },

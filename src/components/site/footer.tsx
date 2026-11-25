@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Logo } from "@/components/brand/logo"
 
 const COLS = [
-  { title: "Platform", links: [["Live", "/live"], ["Map", "/live"], ["Community", "/#modules"], ["Alerts", "/#modules"]] },
+  { title: "Platform", links: [["Live", "/live"], ["Map", "/live"], ["Insights", "/insights"], ["Community", "/#modules"], ["Alerts", "/#modules"]] },
   { title: "Build", links: [["Developers", "/#developers"], ["API (preview)", "/#developers"], ["Status scale", "/#verification"]] },
   { title: "Company", links: [["About", "/#about"], ["Mission", "/#about"], ["Transparency", "/#verification"]] },
 ]
