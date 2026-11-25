@@ -31,3 +31,9 @@ export const LIVE = {
   description:
     "Fires, hartals, rallies, blockades, traffic jams, floods, weather and air quality near you — verified, mapped and updated live. Bangla & English.",
 }
+
+export const INSIGHTS = {
+  title: "Insights — trends, risk and impact near you",
+  description:
+    "Air quality, heat, rain, river flow, earthquakes and street incidents near you — 7-day trends, transparent risk scores and what they mean, in Bangla & English.",
+}
