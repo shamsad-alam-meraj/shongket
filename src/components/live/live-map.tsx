@@ -31,7 +31,16 @@ type Props = {
   className?: string
   /** bump to re-centre on `center` */
   recenterKey?: number
+  /** optional polylines (e.g. routes), drawn under the markers */
+  lines?: MapLine[]
+  /** when this changes, fit the view to `fitCoords` */
+  fitKey?: string
+  fitCoords?: [number, number][]
+  /** extra point markers (e.g. route start / end) */
+  pins?: { id: string; lat: number; lng: number; label: string; color: string }[]
 }
+
+export type MapLine = { id: string; coords: [number, number][]; color: string; width?: number; opacity?: number; dashed?: boolean }
 
 /** Brand-tint the base style: midnight background, muted water. */
 function tint(map: maplibregl.Map, dark: boolean) {
@@ -90,7 +99,7 @@ function serviceEl(s: LiveService, onClick: () => void) {
 
 export function LiveMap({
   center, zoom = 12.5, user, signals, services = [], selectedId, onSelect,
-  interactive = true, className, recenterKey = 0,
+  interactive = true, className, recenterKey = 0, lines, fitKey, fitCoords, pins,
 }: Props) {
   const box = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
@@ -197,6 +206,74 @@ export function LiveMap({
     const far = sig && sig.distanceKm > 80
     m.flyTo({ center: [t.lng, t.lat], zoom: far ? 6 : Math.max(m.getZoom(), 14), duration: 900, padding: { right: 0, top: 0, bottom: 0, left: 0 } })
   }, [selectedId, signals, services, interactive])
+
+  // Polylines (routes). Re-added after a theme/style swap.
+  useEffect(() => {
+    const m = map.current
+    if (!m || !lines) return
+    const ids = new Set(lines.map((l) => l.id))
+    const draw = () => {
+      // Note: isStyleLoaded() can still be false during "style.load", so don't gate on it.
+      if (!ready.current) return
+      // remove lines no longer wanted
+      for (const layer of m.getStyle().layers ?? []) {
+        if (layer.id.startsWith("ln-") && !ids.has(layer.id.slice(3))) {
+          m.removeLayer(layer.id)
+          if (m.getSource(layer.id)) m.removeSource(layer.id)
+        }
+      }
+      for (const l of lines) {
+        const id = `ln-${l.id}`
+        const data: GeoJSON.Feature<GeoJSON.LineString> = { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: l.coords } }
+        const src = m.getSource(id) as maplibregl.GeoJSONSource | undefined
+        if (src) src.setData(data)
+        else m.addSource(id, { type: "geojson", data })
+        const paint = {
+          "line-color": l.color,
+          "line-width": l.width ?? 5,
+          "line-opacity": l.opacity ?? 0.9,
+          ...(l.dashed ? { "line-dasharray": [1.5, 1.5] } : {}),
+        }
+        if (m.getLayer(id)) {
+          for (const [k, v] of Object.entries(paint)) (m.setPaintProperty as (l: string, k: string, v: unknown) => void).call(m, id, k, v)
+          m.moveLayer(id) // keep draw order = array order
+        } else m.addLayer({ id, type: "line", source: id, layout: { "line-cap": "round", "line-join": "round" }, paint })
+      }
+    }
+    if (ready.current) draw()
+    const subs = onStyleReady.current
+    subs.add(draw)
+    return () => {
+      subs.delete(draw)
+    }
+  }, [lines])
+
+  // Fit to bounds when asked
+  useEffect(() => {
+    const m = map.current
+    if (!m || !fitKey || !fitCoords?.length) return
+    const b = new maplibregl.LngLatBounds(fitCoords[0], fitCoords[0])
+    for (const c of fitCoords) b.extend(c)
+    m.fitBounds(b, { padding: 48, duration: 900, maxZoom: 15 })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitKey])
+
+  // Start / end pins
+  useEffect(() => {
+    const m = map.current
+    if (!m || !pins?.length) return
+    // Rebuilt on every change (there are only two) and removed on cleanup, so they always belong
+    // to the live map instance — including after React's dev-mode double mount.
+    const made = pins.map((p) => {
+      const el = document.createElement("div")
+      el.className = "pin-marker"
+      el.style.setProperty("--c", p.color)
+      el.textContent = p.label
+      el.setAttribute("aria-label", p.label === "A" ? "Start" : "Destination")
+      return new maplibregl.Marker({ element: el }).setLngLat([p.lng, p.lat]).addTo(m)
+    })
+    return () => made.forEach((mk) => mk.remove())
+  }, [pins])
 
   // User location + accuracy ring
   useEffect(() => {

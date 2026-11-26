@@ -43,3 +43,9 @@ export const SERVICES = {
   description:
     "Hospitals, clinics, pharmacies, police, fire service, shelters, ATMs and drinking water near you — with what's open now, directions and national hotlines. Bangla & English.",
 }
+
+export const ROUTES = {
+  title: "Routes — check your trip for blockades, rallies & jams",
+  description:
+    "Compare road routes in Bangladesh against reported blockades, rallies, clashes, accidents, jams and waterlogging — and see rain at both ends. Bangla & English.",
+}

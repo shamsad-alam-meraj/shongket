@@ -11,7 +11,7 @@ const LINKS = [
   { href: "/live", label: "Live" },
   { href: "/insights", label: "Insights" },
   { href: "/services", label: "Services" },
-  { href: "/#platform", label: "Platform" },
+  { href: "/routes", label: "Routes" },
   { href: "/#modules", label: "Modules" },
   { href: "/#developers", label: "Developers" },
   { href: "/#about", label: "About" },
