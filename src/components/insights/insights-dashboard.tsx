@@ -298,6 +298,8 @@ export function InsightsDashboard() {
                 </>
               )}
               <p className="mt-6 text-xs text-muted-foreground">
+                {data.pulse.unverified > 0 &&
+                  `${data.pulse.unverified} of these ${data.pulse.unverified === 1 ? "is" : "are"} unverified (one outlet) and ${data.pulse.unverified === 1 ? "does" : "do"} not count toward any score. `}
                 {data.pulse.communityReports} community report{data.pulse.communityReports === 1 ? "" : "s"} within 25 km.{" "}
                 <Link href="/live" className="text-teal hover:underline">See them on the Live map →</Link>
               </p>

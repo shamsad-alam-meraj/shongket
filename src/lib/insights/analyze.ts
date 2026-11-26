@@ -250,6 +250,13 @@ function seismicRisk(near: Awaited<ReturnType<typeof quakes>>): Risk {
   }
 }
 
+/** Same rule as the Live map: 2+ independent outlets, and not past the incident type's lifetime. */
+function isConfirmed(c: NewsIncident) {
+  const outlets = new Set(c.items.map((i) => i.outlet)).size
+  const latest = Math.max(...c.items.map((i) => new Date(i.at).getTime()))
+  return outlets >= 2 && Date.now() - latest <= c.type.ttlH * 3.6e6
+}
+
 function newsWithin(incidents: NewsIncident[], p: Pt) {
   return incidents.filter((c) => {
     const d = haversineKm(p, c.place)
@@ -274,18 +281,19 @@ function civicRisk(local: NewsIncident[], reports: number, p: Pt): Risk {
   return {
     key: "civic", label: "Civic disruption", labelBn: "নাগরিক বিঘ্ন", score, level: levelOf(score),
     reading: local.length
-      ? `${local.length} incident cluster${local.length === 1 ? "" : "s"} reported nearby in 24 h`
-      : "No street incidents reported nearby in 24 h",
+      ? `${local.length} confirmed incident${local.length === 1 ? "" : "s"} reported nearby in 24 h`
+      : "No confirmed street incidents nearby in 24 h",
     drivers: [
       types.length ? `Reported: ${types.slice(0, 4).join(", ")}${types.length > 4 ? "…" : ""}.` : "News headlines show no fires, hartals, blockades or jams near you.",
-      `${reports} community report${reports === 1 ? "" : "s"} within 25 km in the last 24 h.`,
-      "Weighted by severity, distance from you and how many independent outlets carry each story.",
+      `${reports} confirmed community report${reports === 1 ? "" : "s"} within 25 km.`,
+      "Only confirmed reports count (2+ independent outlets, or 3+ community confirmations). Weighted by severity and distance.",
     ],
     source: "Google News headlines + community reports",
   }
 }
 
 function pulse(local: NewsIncident[], reports: number, ok: boolean): IncidentPulse {
+  const unverified = local.filter((c) => !isConfirmed(c)).length
   const byType = new Map<string, IncidentPulse["byType"][number]>()
   const byArea = new Map<string, IncidentPulse["byArea"][number]>()
   const hourly = Array<number>(24).fill(0)
@@ -309,6 +317,7 @@ function pulse(local: NewsIncident[], reports: number, ok: boolean): IncidentPul
     byArea: [...byArea.values()].sort((a, b) => b.clusters - a.clusters).slice(0, 6),
     hourly,
     communityReports: reports,
+    unverified,
     ok,
   }
 }
@@ -397,7 +406,10 @@ export async function analyze(p: Pt, exact: Pt) {
   })
 
   const local = news.status === "fulfilled" ? newsWithin(news.value, exact) : []
-  const reportCount = reports.status === "fulfilled" ? reports.value.filter((s) => s.verification !== "expired").length : 0
+  // Scores, impacts and the briefing use confirmed reports only; the pulse shows everything, labelled.
+  const confirmedLocal = local.filter(isConfirmed)
+  const live = reports.status === "fulfilled" ? reports.value.filter((s) => s.verification !== "expired") : []
+  const reportCount = live.filter((s) => s.verification === "confirmed").length
 
   const risks: Risk[] = [
     a.status === "fulfilled" ? airRisk(a.value.max3) : missing("air", "Air quality", "বায়ুর মান", "Open-Meteo Air Quality (CAMS)"),
@@ -408,7 +420,7 @@ export async function analyze(p: Pt, exact: Pt) {
     rv.status === "fulfilled" ? riverRisk(rv.value) : missing("river", "River flood", "নদীর বন্যা", "GloFAS via Open-Meteo"),
     q.status === "fulfilled" ? seismicRisk(q.value) : missing("seismic", "Seismic activity", "ভূকম্পন", "USGS Earthquake Hazards"),
     news.status === "fulfilled" || reports.status === "fulfilled"
-      ? civicRisk(local, reportCount, exact)
+      ? civicRisk(confirmedLocal, reportCount, exact)
       : missing("civic", "Civic disruption", "নাগরিক বিঘ্ন", "Google News headlines + community reports"),
   ]
 
@@ -425,12 +437,12 @@ export async function analyze(p: Pt, exact: Pt) {
   const scored = risks.filter((r) => r.score != null).map((r) => r.score!).sort((x, y) => y - x)
   // Overall leans on the worst area, nudged up when a second area is also raised.
   const overallScore = Math.round(clamp((scored[0] ?? 0) + (scored[1] ?? 0) * 0.15))
-  const imp = impacts(risks, local)
+  const imp = impacts(risks, confirmedLocal)
 
   return {
     risks,
     trends,
-    pulse: pulse(local, reportCount, news.status === "fulfilled"),
+    pulse: pulse(local, live.length, news.status === "fulfilled"),
     impacts: imp,
     overall: { score: overallScore, level: levelOf(overallScore) },
     sources: [
