@@ -252,9 +252,9 @@ html, body {
 .sg-marker.is-selected .sg-dot { transform: scale(1.5); box-shadow: 0 0 0 3px var(--background), 0 0 0 7px color-mix(in srgb, var(--c) 40%, transparent); }
 
 .sv-marker {
-  width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center;
-  font: 700 11px/1 var(--font-martian), monospace; color: #fff; background: var(--c);
-  border: 2px solid var(--background); cursor: pointer; opacity: 0.92; padding: 0;
+  min-width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center;
+  font: 700 10px/1 var(--font-martian), monospace; color: var(--ink, #fff); background: var(--c);
+  border: 2px solid var(--background); cursor: pointer; opacity: 0.92; padding: 0 3px;
   transition: transform 0.2s;
 }
 .sv-marker:hover, .sv-marker.is-selected { transform: scale(1.25); opacity: 1; z-index: 5; }

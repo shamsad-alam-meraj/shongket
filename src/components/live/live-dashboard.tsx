@@ -643,8 +643,8 @@ function ServicesList({
               onClick={() => onSelect(`svc:${s.id}`)}
               className={cn("flex w-full items-center gap-3 rounded-xl p-3 text-left transition", `svc:${s.id}` === selectedId ? "bg-muted" : "hover:bg-muted/50")}
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-lg text-[11px] font-bold text-white" style={{ background: info.color }}>
-                {s.kind === "pharmacy" ? "℞" : s.kind === "police" ? "P" : s.kind === "fire_station" ? "F" : "+"}
+              <span className="grid size-7 shrink-0 place-items-center rounded-lg text-[11px] font-bold" style={{ background: info.color, color: info.ink }}>
+                {info.glyph}
               </span>
               <div className="min-w-0 flex-1">
                 <p className={cn("truncate text-sm font-medium", bangla && s.nameBn && "font-bangla")}>{(bangla && s.nameBn) || s.name}</p>

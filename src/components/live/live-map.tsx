@@ -79,7 +79,8 @@ function serviceEl(s: LiveService, onClick: () => void) {
   el.title = `${SERVICE_INFO[s.kind].label}: ${s.name}`
   el.setAttribute("aria-label", el.title)
   el.style.setProperty("--c", SERVICE_INFO[s.kind].color)
-  el.textContent = s.kind === "pharmacy" ? "℞" : s.kind === "police" ? "P" : s.kind === "fire_station" ? "F" : "+"
+  el.style.setProperty("--ink", SERVICE_INFO[s.kind].ink)
+  el.textContent = SERVICE_INFO[s.kind].glyph
   el.addEventListener("click", (e) => {
     e.stopPropagation()
     onClick()

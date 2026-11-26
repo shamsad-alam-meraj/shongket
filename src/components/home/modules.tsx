@@ -9,7 +9,7 @@ const MODULES: Module[] = [
   { name: "Community", icon: Users, desc: "Citizen reporting, evidence and verification.", beta: true },
   { name: "Alerts", icon: Bell, desc: "Personalised location-based notifications.", beta: true },
   { name: "Insights", icon: Sparkles, desc: "AI-assisted trends, risk and impact analysis.", href: "/insights", live: true },
-  { name: "Services", icon: Building2, desc: "Hospitals, pharmacies, shelters, utilities." },
+  { name: "Services", icon: Building2, desc: "Hospitals, pharmacies, shelters, utilities.", href: "/services", live: true },
   { name: "Routes", icon: Route, desc: "Route disruption and mobility intelligence." },
   { name: "API", icon: Code2, desc: "REST APIs, webhooks and developer SDKs." },
 ]
