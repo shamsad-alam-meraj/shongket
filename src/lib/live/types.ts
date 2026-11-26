@@ -54,7 +54,9 @@ export type LiveResponse = {
   sources: SourceStatus[]
 }
 
-export type ServiceKind = "hospital" | "clinic" | "pharmacy" | "police" | "fire_station"
+export type ServiceKind =
+  | "hospital" | "clinic" | "doctors" | "pharmacy" | "police" | "fire_station"
+  | "shelter" | "fuel" | "atm" | "drinking_water" | "toilets"
 
 export type LiveService = {
   id: string
@@ -90,12 +92,18 @@ export const CATEGORY_INFO: Record<LiveCategory, { label: string; labelBn: strin
   traffic: { label: "Traffic", labelBn: "যান চলাচল" },
 }
 
-export const SERVICE_INFO: Record<ServiceKind, { label: string; labelBn: string; color: string }> = {
-  hospital: { label: "Hospital", labelBn: "হাসপাতাল", color: "#ff5468" },
-  clinic: { label: "Clinic", labelBn: "ক্লিনিক", color: "#ff9447" },
-  pharmacy: { label: "Pharmacy", labelBn: "ফার্মেসি", color: "#20d6c2" },
-  police: { label: "Police", labelBn: "পুলিশ", color: "#579bff" },
-  fire_station: { label: "Fire service", labelBn: "ফায়ার সার্ভিস", color: "#f5c84b" },
+export const SERVICE_INFO: Record<ServiceKind, { label: string; labelBn: string; color: string; glyph: string; ink: string }> = {
+  hospital: { label: "Hospital", labelBn: "হাসপাতাল", color: "#ff5468", glyph: "+", ink: "#ffffff" },
+  clinic: { label: "Clinic", labelBn: "ক্লিনিক", color: "#ff9447", glyph: "+", ink: "#0b1220" },
+  doctors: { label: "Doctor", labelBn: "চিকিৎসক", color: "#f472b6", glyph: "Dr", ink: "#0b1220" },
+  pharmacy: { label: "Pharmacy", labelBn: "ফার্মেসি", color: "#20d6c2", glyph: "℞", ink: "#0b1220" },
+  police: { label: "Police", labelBn: "পুলিশ", color: "#579bff", glyph: "P", ink: "#ffffff" },
+  fire_station: { label: "Fire service", labelBn: "ফায়ার সার্ভিস", color: "#f5c84b", glyph: "F", ink: "#0b1220" },
+  shelter: { label: "Shelter", labelBn: "আশ্রয়কেন্দ্র", color: "#a78bfa", glyph: "S", ink: "#0b1220" },
+  fuel: { label: "Fuel station", labelBn: "জ্বালানি স্টেশন", color: "#94a3b8", glyph: "Fu", ink: "#0b1220" },
+  atm: { label: "ATM", labelBn: "এটিএম", color: "#4ade80", glyph: "৳", ink: "#0b1220" },
+  drinking_water: { label: "Drinking water", labelBn: "খাবার পানি", color: "#38bdf8", glyph: "W", ink: "#0b1220" },
+  toilets: { label: "Public toilet", labelBn: "পাবলিক টয়লেট", color: "#cbd5e1", glyph: "WC", ink: "#0b1220" },
 }
 
 export const REPORT_TYPES = [

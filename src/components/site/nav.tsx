@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils"
 const LINKS = [
   { href: "/live", label: "Live" },
   { href: "/insights", label: "Insights" },
+  { href: "/services", label: "Services" },
   { href: "/#platform", label: "Platform" },
-  { href: "/#verification", label: "Verification" },
   { href: "/#modules", label: "Modules" },
   { href: "/#developers", label: "Developers" },
   { href: "/#about", label: "About" },
@@ -39,7 +39,7 @@ export function Nav() {
         <Link href="/" aria-label="SHONGKET home">
           <Logo />
         </Link>
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-1 xl:flex">
           {LINKS.map((l) => (
             <li key={l.href}>
               <Link
@@ -60,7 +60,7 @@ export function Nav() {
             Open live map <ArrowUpRight className="size-4" />
           </Link>
           <button
-            className="inline-flex size-9 items-center justify-center rounded-full border border-border lg:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-full border border-border xl:hidden"
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -70,7 +70,7 @@ export function Nav() {
         </div>
       </nav>
       {open && (
-        <div className="glass border-t border-border lg:hidden">
+        <div className="glass border-t border-border xl:hidden">
           <ul className="mx-auto flex max-w-7xl flex-col px-4 py-3">
             {LINKS.map((l) => (
               <li key={l.href}>

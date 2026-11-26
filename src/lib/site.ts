@@ -37,3 +37,9 @@ export const INSIGHTS = {
   description:
     "Air quality, heat, rain, river flow, earthquakes and street incidents near you — 7-day trends, transparent risk scores and what they mean, in Bangla & English.",
 }
+
+export const SERVICES = {
+  title: "Services — hospitals, pharmacies & help near you",
+  description:
+    "Hospitals, clinics, pharmacies, police, fire service, shelters, ATMs and drinking water near you — with what's open now, directions and national hotlines. Bangla & English.",
+}
