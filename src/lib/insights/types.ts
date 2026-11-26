@@ -40,6 +40,8 @@ export type IncidentPulse = {
   /** headlines per hour, index 0 = the hour ending now, 23 = 23–24 h ago */
   hourly: number[]
   communityReports: number
+  /** clusters carried by a single outlet (shown, but not counted in any score) */
+  unverified: number
   ok: boolean
 }
 

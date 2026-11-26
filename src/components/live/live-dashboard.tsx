@@ -116,10 +116,13 @@ export function LiveDashboard() {
     const seen = new Set<string>(readLS<string[]>(SEEN_KEY, []))
     const firstRun = seen.size === 0
     for (const s of data.signals) {
+      // Only confirmed reports raise alerts. Unconfirmed ones are not marked seen, so if they are
+      // confirmed later they can still alert then.
+      if (s.verification !== "confirmed") continue
       if (seen.has(s.id)) continue
       seen.add(s.id)
       if (firstRun) continue
-      if (s.verification === "expired" || (s.status !== "significant" && s.status !== "critical")) continue
+      if (s.status !== "significant" && s.status !== "critical") continue
       if (haversineKm(alertArea, s) > 5) continue
       new Notification(`SHONGKET · ${STATUS_META[s.status].label}`, { body: s.title, tag: s.id, icon: "/icon.svg" })
     }
